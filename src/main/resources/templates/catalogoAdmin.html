@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/base}">
+
+<body>
+
+    <div layout:fragment="content">
+
+        <div class="row mb-4 align-items-end">
+            <div class="col">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-2">
+                        <li class="breadcrumb-item"><a th:href="@{/admin}">Admin</a></li>
+                        <li class="breadcrumb-item active">Catálogo</li>
+                    </ol>
+                </nav>
+                <h1 class="fw-bold m-0"><i class="bi bi-collection-play me-2"></i>Catálogo de Películas</h1>
+            </div>
+            <!-- <div class="col-auto">
+                <a th:href="@{/admin/agregarPelicula}" class="btn btn-primary shadow-sm">
+                    <i class="bi bi-plus-lg me-1"></i> Nueva Entrada
+                </a>
+            </div> -->
+        </div>
+
+        <div th:if="${mensajeExito}" class="alert alert-success border-0 shadow-sm alert-dismissible fade show"
+            role="alert">
+            <i class="bi bi-check2-circle me-2"></i>
+            <span th:text="${mensajeExito}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <div class="row g-4">
+            <div th:each="pelicula : ${peliculas}" class="col-12 col-sm-6 col-md-4 col-xl-3">
+                <div class="card h-100 border-0 shadow-sm hover-card">
+                    <div class="bg-dark d-flex align-items-center justify-content-center rounded-top"
+                        style="height: 180px;">
+                        <i class="bi bi-film text-secondary display-1"></i>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h5 class="card-title fw-bold text-truncate mb-0" th:text="${pelicula.titulo}"
+                                style="max-width: 80%;">Título</h5>
+                            <span class="badge bg-light text-dark border" th:text="${pelicula.anio}">2024</span>
+                        </div>
+
+                        <p class="card-text small text-muted mb-3">
+                            <i class="bi bi-person-badge me-1"></i> <span th:text="${pelicula.director}">Director</span>
+                        </p>
+
+                        <div class="d-flex gap-2 mb-3">
+                            <span class="badge bg-info-subtle text-info border border-info-subtle">
+                                <i class="bi bi-tag me-1"></i>$<span th:text="${pelicula.precioAlquiler}">0.0</span>
+                            </span>
+                            <span class="badge bg-success-subtle text-success border border-success-subtle">
+                                <i class="bi bi-cart me-1"></i>$<span th:text="${pelicula.precioCompra}">0.0</span>
+                            </span>
+                        </div>
+
+                        <div th:if="${esAdmin}" class="d-flex gap-2 border-top pt-3">
+                            <a th:href="@{/admin/pelicula/edit/{id}(id=${pelicula.id})}"
+                                class="btn btn-warning btn-sm flex-fill fw-semibold">
+                                <i class="bi bi-pencil-square me-1"></i> Editar
+                            </a>
+
+                            <form th:action="@{/admin/pelicula/delete/{id}(id=${pelicula.id})}" method="post"
+                                class="flex-fill">
+                                <button type="submit" class="btn btn-outline-danger btn-sm w-100 fw-semibold"
+                                    onclick="return confirm('¿Eliminar definitivamente esta película?');">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div th:if="${#lists.isEmpty(peliculas)}" class="col-12 text-center py-5">
+                <div class="card border-0 shadow-sm py-5">
+                    <div class="card-body">
+                        <i class="bi bi-search text-muted display-1"></i>
+                        <h3 class="mt-4 text-muted">No hay películas registradas</h3>
+                        <p>Empieza por agregar una nueva película al sistema.</p>
+                        <a th:href="@{/admin/agregarPelicula}" class="btn btn-primary">Registrar mi primera película</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

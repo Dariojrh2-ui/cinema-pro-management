@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/base}">
+
+<head>
+    <title>Catálogo de Películas | CinemaApp</title>
+
+    <style layout:fragment="style">
+        body {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/images/imagenProyecto1.jpeg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
+
+        .glass-container {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 40px;
+            margin-top: 20px;
+            margin-bottom: 50px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .movie-card {
+            border: none;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .movie-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div layout:fragment="content">
+        <div class="glass-container">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="fw-bold text-dark m-0">Catálogo de Películas</h1>
+                <span class="badge bg-primary text-uppercase px-3 py-2">Explorar</span>
+            </div>
+            <hr>
+
+            <div class="row g-4 mt-2">
+                <div th:each="pelicula : ${peliculas}" class="col-12 col-md-6 col-lg-4 col-xl-3">
+                    <div class="card movie-card h-100 shadow-sm">
+                        <div class="card-body d-flex flex-column">
+                            <h4 class="card-title fw-bold text-primary mb-3" th:text="${pelicula.titulo}">Título</h4>
+
+                            <div class="mb-3 small">
+                                <p class="mb-1 text-muted"><i class="bi bi-person-fill me-1"></i> <span
+                                        th:text="${pelicula.director}">Director</span></p>
+                                <p class="mb-1 text-muted"><i class="bi bi-calendar3 me-1"></i> <span
+                                        th:text="${pelicula.anio}">2024</span></p>
+                            </div>
+
+                            <div class="mt-auto">
+                                <div class="mb-3">
+                                    <div th:if="${pelicula.precioCompra != null}"
+                                        class="d-flex justify-content-between align-items-center mb-1">
+                                        <span class="small text-muted">Compra:</span>
+                                        <span
+                                            class="badge bg-success-subtle text-success border border-success-subtle fw-bold"
+                                            th:text="'$' + ${#numbers.formatDecimal(pelicula.precioCompra, 0, 'COMMA', 2, 'POINT')}">$0.00</span>
+                                    </div>
+                                    <div th:if="${pelicula.precioAlquiler != null}"
+                                        class="d-flex justify-content-between align-items-center">
+                                        <span class="small text-muted">Alquiler:</span>
+                                        <span class="badge bg-info-subtle text-info border border-info-subtle fw-bold"
+                                            th:text="'$' + ${#numbers.formatDecimal(pelicula.precioAlquiler, 0, 'COMMA', 2, 'POINT')}">$0.00</span>
+                                    </div>
+                                </div>
+
+                                <p th:if="${pelicula.totalInventario != null}" class="small mb-3 text-center">
+                                    <span th:class="${pelicula.totalInventario > 0 ? 'text-success' : 'text-danger'}">
+                                        <i class="bi bi-box-seam me-1"></i> <span
+                                            th:text="${pelicula.totalInventario}">5</span> disponibles
+                                    </span>
+                                </p>
+
+                                <div class="d-grid gap-2">
+                                    <form th:action="@{/comprar-pelicula/{id}(id=${pelicula.id})}" method="post"
+                                        class="mb-2">
+                                        <button type="submit" class="btn btn-success w-100 fw-bold shadow-sm"
+                                            th:disabled="${pelicula.totalInventario <= 0}"
+                                            th:attr="onclick=${pelicula.totalInventario > 0} ? |confirmarCompra('${pelicula.id}', '${pelicula.titulo}', '${pelicula.precioCompra}', this.form); return false;| : ''">
+
+                                            <i class="bi bi-cart-check-fill me-1"></i>
+                                            <span
+                                                th:text="${pelicula.totalInventario > 0 ? 'Comprar Ahora' : 'Agotado'}">Comprar</span>
+                                        </button>
+                                    </form>
+
+                                    <form th:action="@{/alquilar/{id}(id=${pelicula.id})}" method="post">
+                                        <button type="submit" class="btn btn-outline-info w-100 fw-bold shadow-sm"
+                                            th:disabled="${pelicula.totalInventario <= 0}"
+                                            th:attr="onclick=${pelicula.totalInventario > 0} ? |confirmarAlquiler('${pelicula.id}', '${pelicula.titulo}', '${pelicula.precioAlquiler}', this.form); return false;| : ''">
+
+                                            <i class="bi bi-clock-history me-1"></i>
+                                            <span
+                                                th:text="${pelicula.totalInventario > 0 ? 'Alquilar' : 'Sin Unidades'}">Alquilar</span>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div th:if="${peliculas.empty}" class="col-12 text-center py-5">
+                    <p class="fs-4 text-muted">No hay películas disponibles en este momento.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="confirmRentModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-0 shadow text-dark">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title fw-bold"><i class="bi bi-clock-history me-2"></i>Confirmar Alquiler</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body text-center p-4">
+                        <p id="modal-message" class="fs-5"></p>
+                    </div>
+                    <div class="modal-footer border-0 justify-content-center pb-4">
+                        <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal">Cancelar</button>
+                        <form id="rentForm" action="" method="post">
+                            <button type="submit" class="btn btn-primary px-4">Aceptar Alquiler</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script th:inline="javascript">
+            /**
+             * Función para comprar: Muestra alerta con precio formateado
+             */
+            function confirmarCompra(id, titulo, precio, formulario) {
+                // Formateador para moneda (Ejemplo: $ 25.000)
+                const formatter = new Intl.NumberFormat('es-CO', {
+                    style: 'currency',
+                    currency: 'COP',
+                    minimumFractionDigits: 0
+                });
+
+                const precioTxt = formatter.format(precio);
+
+                if (confirm(`¿Confirmas la compra de "${titulo}" por ${precioTxt}?`)) {
+                    formulario.submit();
+                }
+            }
+
+            /**
+             * Función para alquilar: Muestra alerta con precio y advertencia de tiempo
+             */
+            function confirmarAlquiler(id, titulo, precio, formulario) {
+                const formatter = new Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: 'USD',
+                    minimumFractionDigits: 2
+                });
+
+                const precioTxt = formatter.format(precio);
+
+                const mensaje = `¿Deseas alquilar "${titulo}" por ${precioTxt}?\n\nNota: El acceso expira en 48 horas.`;
+
+                if (confirm(mensaje)) {
+                    formulario.submit();
+                }
+            }
+
+            // Nota: He eliminado setModalData porque los nuevos botones
+            // ahora envían los datos directamente a estas funciones más rápidas.
+        </script>
+    </div>
+</body>
+
+</html>
