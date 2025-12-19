@@ -1,3 +1,8 @@
+<p align="center">
+  ![Dashboard CinemaPro](<img width="1280" height="800" alt="Captura de pantalla 2025-12-19 a la(s) 1 43 25 a  m" src="https://github.com/user-attachments/assets/32e392ee-48d4-4b72-8f71-d0b45ba58555" />)
+</p>
+
+
 # 🎬 CinemaPro - Sistema de Gestión de Cine y Videoclub
 
 Este proyecto es una aplicación web completa desarrollada con **Spring Boot** para la gestión de inventario, ventas y alquiler de películas. Está diseñado para ofrecer una experiencia administrativa robusta con analítica en tiempo real.
