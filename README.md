@@ -1,7 +1,6 @@
 <p align="center">
-  ![Dashboard CinemaPro](<img width="1280" height="800" alt="Captura de pantalla 2025-12-19 a la(s) 1 43 25 a  m" src="https://github.com/user-attachments/assets/32e392ee-48d4-4b72-8f71-d0b45ba58555" />)
+  ![Dashboard CinemaPro](<img width="1280" height="800" alt="Gemini_Generated_Image_etkkc7etkkc7etkk (1)" src="https://github.com/user-attachments/assets/0d53f7ab-b658-4d8c-a309-cda0655050ef" />)
 </p>
-
 
 # 🎬 CinemaPro - Sistema de Gestión de Cine y Videoclub
 
