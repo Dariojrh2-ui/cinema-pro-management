@@ -3,6 +3,12 @@
 </p>
 
 # 🎬 CinemaPro - Sistema de Gestión de Cine y Videoclub
+## 📺 Demo en Video
+Haz clic en la imagen a continuación para ver el funcionamiento completo del sistema:
+
+[![Demo CinemaPro](https://img.youtube.com/vi/J2-28IfSKF0/0.jpg)](https://www.youtube.com/watch?v=J2-28IfSKF0)
+
+*Nota: En el video se muestra la gestión de inventario, el panel administrativo y la lógica de ventas.*
 
 Este proyecto es una aplicación web completa desarrollada con **Spring Boot** para la gestión de inventario, ventas y alquiler de películas. Está diseñado para ofrecer una experiencia administrativa robusta con analítica en tiempo real.
 
